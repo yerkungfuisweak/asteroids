@@ -1,13 +1,20 @@
 import pygame
 from circleshape import CircleShape
-from constants import PLAYER_RADIUS, PLAYER_TURN_SPEED, PLAYER_SPEED
+from constants import *
 
-class Player(CircleShape):
+class Player(pygame.sprite.Sprite):  # Extending Sprite for group compatibility
     def __init__(self, x, y):
-        super().__init__(x, y, PLAYER_RADIUS)
+        super().__init__(self.containers)  # Automatically add to groups
         self.rotation = 0
+        self.radius = PLAYER_RADIUS
+        self.position = pygame.Vector2(x, y)
+
+        # Create a placeholder image and rect for compatibility with Group.draw()
+        self.image = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA)
+        self.rect = self.image.get_rect(center=(x, y))  # Center rectangle
     
     def draw(self, screen):
+        # Delegate drawing your custom triangular ship to this method
         pygame.draw.polygon(screen, "white", self.triangle(), width=2)
 
     # in the player class
@@ -29,11 +36,16 @@ class Player(CircleShape):
             self.rotate(-dt)
         elif keys[pygame.K_d]:
             self.rotate(dt)
-        elif keys[pygame.K_w]:
+        if keys[pygame.K_w]:
             self.move(dt)
         elif keys[pygame.K_s]:
             self.move(-dt)
 
+        # Keep `rect.center` in sync with `position` for compatibility
+        self.rect.center = self.position
+
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+        self.position.x = max(self.radius, min(SCREEN_WIDTH - self.radius, self.position.x))
+        self.position.y = max(self.radius, min(SCREEN_HEIGHT - self.radius, self.position.y))

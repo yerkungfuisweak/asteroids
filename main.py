@@ -3,6 +3,9 @@ from constants import *
 from player import *
 
 def main():
+    updatable = pygame.sprite.Group()
+    drawable = pygame.sprite.Group()
+    Player.containers = (updatable, drawable)
     print("Starting asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
@@ -21,8 +24,9 @@ def main():
                 return
         dt = clock.tick(60) / 1000.0
         screen.fill((0, 0, 0)) 
-        player.update(dt)
-        player.draw(screen)
+        updatable.update(dt)
+        for sprite in drawable:
+            sprite.draw(screen)  # Call each sprite's custom draw() method
         pygame.display.flip()
 
 if __name__ == "__main__":
