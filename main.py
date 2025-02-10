@@ -3,6 +3,7 @@ from constants import *
 from player import *
 from asteroid import *
 from asteroidfield import *
+from circleshape import *
 
 def main():
     # game initialization code
@@ -42,9 +43,14 @@ def main():
         dt = clock.tick(60) / 1000.0
         screen.fill((0, 0, 0)) 
         updatable.update(dt)
+        for sprite in asteroids:
+            if sprite.collision(player) == True:
+                print("Game over!")
+                exit()
         for sprite in drawable:
             sprite.draw(screen)  # Call each sprite's custom draw() method
         pygame.display.flip()
+
 
 if __name__ == "__main__":
     main()
