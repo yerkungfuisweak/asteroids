@@ -5,7 +5,7 @@ from constants import *
 class Asteroid(CircleShape):
     def __init__(self, x, y, radius):
         super().__init__(x, y, radius)  # Pass x, y, radius up to CircleShape
-        self.velocity = pygame.Vector2(30, 60)
+        self.velocity = pygame.Vector2(0, 0)
 
     def draw(self, screen):
         pygame.draw.circle(screen, "white", self.position, self.radius, width=2)

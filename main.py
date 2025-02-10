@@ -16,15 +16,17 @@ def main():
     updatable = pygame.sprite.Group()  # For all objects that update
     drawable = pygame.sprite.Group()   # For all objects that are drawn
     asteroids = pygame.sprite.Group()  # Specifically for asteroids
+    shots = pygame.sprite.Group()      # Specifically for shots
 
     print("Starting asteroids!")
     print(f"Screen width: {SCREEN_WIDTH}")
     print(f"Screen height: {SCREEN_HEIGHT}")
     
     # Set the containers   
-    Player.containers = (updatable, drawable)    # Set containers for Player
-    Asteroid.containers = (asteroids, updatable, drawable)    # Set containers for Asteroid
-    AsteroidField.containers = (updatable)     #set containers for asteroidfield
+    Player.containers = (updatable, drawable)                   # Set containers for Player
+    Asteroid.containers = (asteroids, updatable, drawable)      # Set containers for Asteroid
+    AsteroidField.containers = (updatable)                      # set containers for asteroidfield
+    Shot.containers = (shots, updatable, drawable)              # set containers for shot
     
     player_x = SCREEN_WIDTH // 2
     player_y = SCREEN_HEIGHT // 2

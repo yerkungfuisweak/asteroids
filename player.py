@@ -40,6 +40,8 @@ class Player(pygame.sprite.Sprite):  # Extending Sprite for group compatibility
             self.move(dt)
         elif keys[pygame.K_s]:
             self.move(-dt)
+        if keys[pygame.K_SPACE]:
+            self.shoot()
 
         # Keep `rect.center` in sync with `position` for compatibility
         self.rect.center = self.position
@@ -49,3 +51,22 @@ class Player(pygame.sprite.Sprite):  # Extending Sprite for group compatibility
         self.position += forward * PLAYER_SPEED * dt
         self.position.x = max(self.radius, min(SCREEN_WIDTH - self.radius, self.position.x))
         self.position.y = max(self.radius, min(SCREEN_HEIGHT - self.radius, self.position.y))
+
+    def shoot(self):
+        forward = pygame.Vector2(0, 1).rotate(self.rotation)
+        bullet_velocity = forward * PLAYER_SHOOT_SPEED
+        bullet = Shot(self.position.x, self.position.y)
+        bullet.velocity = bullet_velocity
+
+class Shot(CircleShape):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self, self.containers)
+        super().__init__(x, y, SHOT_RADIUS)
+        self.radius = SHOT_RADIUS
+        self.velocity = pygame.math.Vector2(0,1)
+
+    def draw(self, screen):
+        pygame.draw.circle(screen, "white", self.position, self.radius, width=2)
+
+    def update(self, dt):
+        self.position = self.position + (self.velocity * dt)
