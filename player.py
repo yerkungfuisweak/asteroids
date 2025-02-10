@@ -8,6 +8,7 @@ class Player(pygame.sprite.Sprite):  # Extending Sprite for group compatibility
         self.rotation = 0
         self.radius = PLAYER_RADIUS
         self.position = pygame.Vector2(x, y)
+        self.timer = 0
 
         # Create a placeholder image and rect for compatibility with Group.draw()
         self.image = pygame.Surface((self.radius * 2, self.radius * 2), pygame.SRCALPHA)
@@ -31,6 +32,7 @@ class Player(pygame.sprite.Sprite):  # Extending Sprite for group compatibility
     
     def update(self, dt):
         keys = pygame.key.get_pressed()
+        self.timer -= dt
 
         if keys[pygame.K_a]:
             self.rotate(-dt)
@@ -41,7 +43,11 @@ class Player(pygame.sprite.Sprite):  # Extending Sprite for group compatibility
         elif keys[pygame.K_s]:
             self.move(-dt)
         if keys[pygame.K_SPACE]:
-            self.shoot()
+            if self.timer > 0:
+                pass
+            else:
+                self.shoot()
+                self.timer = PLAYER_SHOOT_COOLDOWN
 
         # Keep `rect.center` in sync with `position` for compatibility
         self.rect.center = self.position
@@ -53,6 +59,7 @@ class Player(pygame.sprite.Sprite):  # Extending Sprite for group compatibility
         self.position.y = max(self.radius, min(SCREEN_HEIGHT - self.radius, self.position.y))
 
     def shoot(self):
+        self.timer = PLAYER_SHOOT_COOLDOWN
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         bullet_velocity = forward * PLAYER_SHOOT_SPEED
         bullet = Shot(self.position.x, self.position.y)
